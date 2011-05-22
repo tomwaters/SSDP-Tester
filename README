@@ -1,0 +1,4 @@
+SSDP-Tester:
+This is a C# windows forms tool for monitoring SSDP traffic and sending SSDP messages.
+
+This came from https://github.com/tomwaters/SSDP-Tester
