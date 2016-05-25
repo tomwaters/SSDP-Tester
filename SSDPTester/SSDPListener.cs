@@ -130,9 +130,26 @@ namespace SSDPTester
             {
                 msgReceiver = receiver;
 
-                udpUnicastClient = new UdpClient(unicastPort);
+                udpUnicastClient = new UdpClient();
                 
-                udpMulticastClient = new UdpClient(multicastPort);
+                udpMulticastClient = new UdpClient();
+
+                // Tries to enable a multi-client connection
+                // Note that any subclient must be initialized with those same parameters (options)
+                // in order to not get an exception.
+                try
+                {
+                    udpUnicastClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    udpMulticastClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                }
+                catch (Exception)
+                {
+                    // Throw? Ignore? 
+                }
+
+                udpUnicastClient.Client.Bind(new IPEndPoint(IPAddress.Any, unicastPort));
+                udpMulticastClient.Client.Bind(new IPEndPoint(IPAddress.Any, multicastPort));
+
                 IPAddress ipSSDP = IPAddress.Parse(multicastIP);
                 udpMulticastClient.JoinMulticastGroup(ipSSDP);
 
